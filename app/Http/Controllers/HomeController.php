@@ -22,7 +22,9 @@ class HomeController extends Controller
 
 
     public function cart(){
-        return view("cart");
+
+        $cart = session()->get('cart', []);
+        return view("cart",compact('cart'));
     }
 
 
@@ -56,6 +58,9 @@ class HomeController extends Controller
             $categories = Category::with('products')->get();
             $selectedCategory = null;
 
+
+
+
         return view('shop', compact('categories', 'selectedCategory'));
     }
 
@@ -83,16 +88,49 @@ class HomeController extends Controller
 //    }
 
 
-public function AddToCart(Request $request)
-{
-//    dd($request->all());
-    $cart = Product::find($request->productId);
+    public function AddToCart(Request $request)
+    {
 
-    $cartItem = [
 
-    ];
-    return redirect()->back();
-}
+        $product = Product::findOrFail($request->productId);
+        $product_id = $product->id;
+
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$product_id])) {
+            $cart[$product_id]['quantity'] += $request->quantity;
+        } else {
+            $cart[$product_id] = [
+                'id'       => $product->id,
+                'name'     => $product->name,
+                'price'    => $product->price,
+                'images'   => $product->images ?? '',
+                'quantity' => $request->quantity,
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return response()->json([
+            'success' => true,
+            'cart'    => $cart,
+        ], 201);
+    }
+
+
+    public function updateCart(Request $request)
+    {
+        $cart = session()->get('cart');
+
+        if(isset($cart[$request->productId])){
+            $cart[$request->productId]['quantity'] = $request->quantity;
+            session()->put('cart', $cart);
+        }
+
+        return response()->json([
+            'cart' => $cart
+        ]);
+    }
 
 
 

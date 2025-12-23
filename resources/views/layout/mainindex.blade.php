@@ -84,7 +84,7 @@
             </div>
             <!-- Cart Menu -->
             <div class="cart-fav-search mb-100">
-                <a href="{{ route('cart') }}" class="cart-nav"><img src="{{ asset('img/core-img/cart.png') }}" alt=""> Cart <span>(0)</span></a>
+                <a href="{{ route('cart') }}" class="cart-nav"><img src="{{ asset('img/core-img/cart.png') }}" alt=""> Cart <span id="cart-count">(0)</span></a>
                 <a href="#" class="fav-nav"><img src="{{ asset('img/core-img/favorites.png') }}" alt=""> Favourite</a>
 
                 <a href="#" class="search-nav"><img src="{{ asset('img/core-img/search.png') }}" alt=""> Search</a>
@@ -171,6 +171,35 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="{{ asset('js/plugins.js') }}"></script>
     <!-- Active js -->
     <script src="{{ asset('js/active.js') }}"></script>
+
+
+        <script>
+            $(document).ready(function () {
+
+                $(document).on('submit', '.addToCartForm', function (e) {
+                    e.preventDefault(); // 🔥 stop page reload
+
+                    let form = $(this);
+
+                    $.ajax({
+                        url: "{{ route('add.to.cart') }}",
+                        method: "POST",
+                        data: form.serialize(),
+                        success: function (response) {
+                            console.log(response);
+                            $('#cart-count').text(Object.keys(response.cart).length);
+                        },
+                        error: function (err) {
+                            console.error(err);
+                        }
+                    });
+                });
+
+            });
+        </script>
+
+
+
 
 </body>
 

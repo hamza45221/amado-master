@@ -4,7 +4,7 @@
 
 @extends('layout.mainindex')
 @section('content')
- 
+
 
         <div class="cart-table-area section-padding-100">
             <div class="container-fluid">
@@ -22,87 +22,62 @@
                                         <th>Name</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+
+
+                                @php
+                                    $grandTotal = 0;
+                                @endphp
+
+                                @foreach($cart as $c)
+                                    @php
+                                        $images = json_decode($c['images'], true);
+                                        $totalPrice = $c['price'] * $c['quantity'];
+                                        $grandTotal += $totalPrice;
+                                    @endphp
                                     <tr>
-                                        <td class="cart_product_img">
-                                            <a href="#"><img src="img/bg-img/cart1.jpg" alt="Product"></a>
+                                        <td>
+                                            @if(!empty($images) && isset($images[0]))
+                                                <img src="{{ asset($images[0]) }}" width="80" alt="Product">
+                                            @endif
                                         </td>
-                                        <td class="cart_product_desc">
-                                            <h5>White Modern Chair</h5>
-                                        </td>
-                                        <td class="price">
-                                            <span>$130</span>
-                                        </td>
-                                        <td class="qty">
-                                            <div class="qty-btn d-flex">
-                                                <p>Qty</p>
-                                                <div class="quantity">
-                                                    <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                                    <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="1">
-                                                    <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                                </div>
+                                        <td>{{ $c['name'] }}</td>
+                                        <td class="unit-price" data-price="{{ $c['price'] }}">${{ $c['price'] }}</td>
+                                        <td>
+                                            <div class="quantity-btns">
+                                                <button type="button" class="form-control decrement" data-id="{{ $c['id'] }}">-</button>
+                                                <input type="text" class="form-control" value="{{ $c['quantity'] }}" readonly id="qty-{{ $c['id'] }}">
+                                                <button type="button" class=" form-control increment" data-id="{{ $c['id'] }}">+</button>
                                             </div>
                                         </td>
+                                        <td class="total-price" id="total-{{ $c['id'] }}">${{ $totalPrice }}</td>
                                     </tr>
-                                    <tr>
-                                        <td class="cart_product_img">
-                                            <a href="#"><img src="img/bg-img/cart2.jpg" alt="Product"></a>
-                                        </td>
-                                        <td class="cart_product_desc">
-                                            <h5>Minimal Plant Pot</h5>
-                                        </td>
-                                        <td class="price">
-                                            <span>$10</span>
-                                        </td>
-                                        <td class="qty">
-                                            <div class="qty-btn d-flex">
-                                                <p>Qty</p>
-                                                <div class="quantity">
-                                                    <span class="qty-minus" onclick="var effect = document.getElementById('qty2'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                                    <input type="number" class="qty-text" id="qty2" step="1" min="1" max="300" name="quantity" value="1">
-                                                    <span class="qty-plus" onclick="var effect = document.getElementById('qty2'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cart_product_img">
-                                            <a href="#"><img src="img/bg-img/cart3.jpg" alt="Product"></a>
-                                        </td>
-                                        <td class="cart_product_desc">
-                                            <h5>Minimal Plant Pot</h5>
-                                        </td>
-                                        <td class="price">
-                                            <span>$10</span>
-                                        </td>
-                                        <td class="qty">
-                                            <div class="qty-btn d-flex">
-                                                <p>Qty</p>
-                                                <div class="quantity">
-                                                    <span class="qty-minus" onclick="var effect = document.getElementById('qty3'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                                    <input type="number" class="qty-text" id="qty3" step="1" min="1" max="300" name="quantity" value="1">
-                                                    <span class="qty-plus" onclick="var effect = document.getElementById('qty3'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                @endforeach
+
+
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="col-12 col-lg-4">
                         <div class="cart-summary">
-                            <h5>Cart Total</h5>
-                            <ul class="summary-table">
-                                <li><span>subtotal:</span> <span>$140.00</span></li>
-                                <li><span>delivery:</span> <span>Free</span></li>
-                                <li><span>total:</span> <span>$140.00</span></li>
-                            </ul>
-                            <div class="cart-btn mt-100">
-                                <a href="cart.html" class="btn amado-btn w-100">Checkout</a>
+
+                                <h5>Cart Total</h5>
+                                <ul class="summary-table">
+                                    <li><span>subtotal:</span> <span id="grand-total">${{ $grandTotal }}</span></li>
+                                    <li><span>delivery:</span> <span>Free</span></li>
+                                    <li><span>total:</span> <span id="grand-total-total">${{ $grandTotal  }}</span></li>
+                                </ul>
+                                <div class="cart-btn mt-100">
+                                    <a href="{{ route('checkout') }}" class="btn amado-btn w-100">Checkout</a>
+                                </div>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -136,5 +111,71 @@
     </section>
     <!-- ##### Newsletter Area End ##### -->
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
 
-    @endsection
+                function updateTotals(id, qty) {
+                    let row = document.getElementById('qty-' + id).closest('tr');
+                    let unitPrice = parseFloat(row.querySelector('.unit-price').dataset.price);
+                    let totalPriceElem = row.querySelector('.total-price');
+
+                    // Update total for this product
+                    let totalPrice = unitPrice * qty;
+                    totalPriceElem.innerText = '$' + totalPrice.toFixed(2);
+
+                    // Update grand total
+                    let grandTotal = 0;
+                    document.querySelectorAll('.total-price').forEach(function(el) {
+                        grandTotal += parseFloat(el.innerText.replace('$',''));
+                    });
+
+                    document.getElementById('grand-total').innerText = '$' + grandTotal.toFixed(2);
+                    document.getElementById('grand-total-total').innerText = '$' + grandTotal.toFixed(2);
+                }
+
+                function updateSession(id, qty) {
+                    $.ajax({
+                        url: "{{ route('cart.update') }}",
+                        method: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            productId: id,
+                            quantity: qty
+                        },
+                        success: function(response) {
+                            console.log('Cart updated:', response.cart);
+                        }
+                    });
+                }
+
+                document.querySelectorAll('.increment').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        let id = this.dataset.id;
+                        let qtyInput = document.getElementById('qty-' + id);
+                        let qty = parseInt(qtyInput.value) + 1;
+                        qtyInput.value = qty;
+                        updateTotals(id, qty);
+                        updateSession(id, qty);
+                    });
+                });
+
+                document.querySelectorAll('.decrement').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        let id = this.dataset.id;
+                        let qtyInput = document.getElementById('qty-' + id);
+                        if(parseInt(qtyInput.value) > 1){
+                            let qty = parseInt(qtyInput.value) - 1;
+                            qtyInput.value = qty;
+                            updateTotals(id, qty);
+                            updateSession(id, qty);
+                        }
+                    });
+                });
+
+            });
+        </script>
+
+
+
+
+@endsection

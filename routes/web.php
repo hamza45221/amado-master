@@ -21,6 +21,7 @@ Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
 Route::get('/shop/category/{id}', [HomeController::class, 'category'])->name('shop.category');
 Route::get('/search/product', [HomeController::class, 'search'])->name('product.search');
 Route::post('/add-to-cart', [HomeController::class, 'AddToCart'])->name('add.to.cart');
+Route::post('/cart/update', [HomeController::class, 'updateCart'])->name('cart.update');
 
 
 Route::group(['prefix' => 'dashboard'], function () {

@@ -200,7 +200,7 @@
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                 </div>
                                 <div class="cart">
-                                    <form action="{{ route('add.to.cart') }}" method="POST" enctype="">
+                                    <form class="addToCartForm">
                                         @csrf
                                         <input type="hidden" name="productId" value="{{ $product->id }}" />
                                         <input type="hidden" name="quantity" min="1" value="1" />
