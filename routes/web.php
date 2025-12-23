@@ -15,9 +15,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
-Route::get('/product-detail', [HomeController::class, 'productDetail'])->name('product.detail');
+//Route::get('/product-detail', [HomeController::class, 'productDetail'])->name('product.detail');
+Route::get('/product-detail/{id}', [HomeController::class, 'productDetailSec'])->name('product.detail.sec');
 Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
 Route::get('/shop/category/{id}', [HomeController::class, 'category'])->name('shop.category');
+Route::get('/search/product', [HomeController::class, 'search'])->name('product.search');
+Route::post('/add-to-cart', [HomeController::class, 'AddToCart'])->name('add.to.cart');
 
 
 Route::group(['prefix' => 'dashboard'], function () {
@@ -46,7 +49,7 @@ Route::group(['prefix' => 'dashboard'], function () {
         Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
         Route::post('/update/{id}', [ProductController::class, 'update'])->name('product.update');
 
-        
+
 
     });
 

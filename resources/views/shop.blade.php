@@ -1,7 +1,7 @@
- 
+
 @extends('layout.mainindex')
 @section('content')
- 
+
 
         <div class="shop_sidebar_area">
 
@@ -121,7 +121,7 @@
                                             <option value="value">Popular</option>
                                         </select>
                                     </form>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,27 @@
                             <div class="product-meta-data">
                                 <div class="line"></div>
                                 <p class="product-price">{{ $product->price }}</p>
+                                <a href="{{ route('product.detail.sec',$product->id) }}">
                                 <h6>{{ $product->name }}</h6>
+                                </a>
+                            </div>
+                            <!-- Ratings & Cart -->
+                            <div class="ratings-cart text-right">
+                                <div class="ratings">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </div>
+                                <div class="cart">
+                                    <form action="{{ route('add.to.cart') }}" method="POST" enctype="">
+                                        @csrf
+                                        <input type="hidden" name="productId" value="{{ $product->id }}" />
+                                        <input type="hidden" name="quantity" min="1" value="1" />
+                                        <button type="submit" data-toggle="tooltip" class="form-control" data-placement="left" title="Add to Cart"><img src="img/core-img/cart.png" alt=""></button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

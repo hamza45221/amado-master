@@ -32,13 +32,29 @@ class HomeController extends Controller
 
 
     public function productDetail(){
+
         return view("product-details");
     }
 
+    public function productDetailSec($id){
+        $products = Product::with('category')->find($id);
+        return view("product-details",compact('products'));
+    }
 
-    public function shop(){
-          $categories = Category::with('products')->get();
-        $selectedCategory = null;
+
+    public function shop(Request $request){
+
+//        if($request){
+//            $request->validate([
+//                'search' => 'required|string|max:255',
+//            ]);
+
+//            $search = $request->search;
+//
+//            $products = Product::where('name', 'LIKE', "%{$search}%")->get();
+//        }
+            $categories = Category::with('products')->get();
+            $selectedCategory = null;
 
         return view('shop', compact('categories', 'selectedCategory'));
     }
@@ -57,6 +73,27 @@ class HomeController extends Controller
 
         return view('shop', compact('categories', 'selectedCategory'));
     }
+
+
+//    public function search(Request $request)
+//    {
+//
+//        $categories = Category::all();
+//        return view('shop', compact('products', 'search','categories'));
+//    }
+
+
+public function AddToCart(Request $request)
+{
+//    dd($request->all());
+    $cart = Product::find($request->productId);
+
+    $cartItem = [
+
+    ];
+    return redirect()->back();
+}
+
 
 
 }
